@@ -1,0 +1,125 @@
+/*Programa cadastroDePecas.js
+
+Função:
+O programa cadastra peças em uma lista, que será possível somente se forem 
+atendidos os seguintes requesitos:
+1 - A lista deverá conter no máximo 10 intens;
+2 - O nome do produto deve apresentar no mínimo três caracteres e o seu peso
+    deverá ser superior a 100 gr.
+
+Autor: estagiario-aos-quarenta. 
+data: 19/06/2022
+----------------------------------------------------------------------------*/
+
+
+//SEÇÃO DAS DECLARAÇÕES
+
+//importa o módulo 'readline-sync', para entradas de dados via teclado
+const read = require('readline-sync'); 
+
+/*array 'respostas' serve de referência para variantes da resposta 'sim', que
+será dada pelo usuário sempre que o mesmo quiser realizar um novo cadastro*/
+const respostas = ['s', 'S', 'sim', 'Sim', 'SIM', 'sIM'];
+
+/*a estrutura 'listaDeProdutos' representará a lista de produtos, onde serão
+armazenados os produtos*/
+let listaDeProdutos = new Map();
+
+//variável 'nomeProduto' armazena o nome do produto informado pelo usuário 
+let nomeDoProduto;
+
+//variável 'pesoProduto' armazena o peso do produto informado pelo usuário
+let pesoDoProduto;
+
+/* variável 'cadastrarNovoProduto' recebe a resposta do usuário e controla a 
+estrutura de repetição 'while', responsável por permitir novos cadastros*/
+let cadastrarNovoProduto;
+
+/*variável 'valorValido' recebe o valor booleano 'true', caso o produto atenda
+os requisitos e controla a estrutura 'while' mais interna, resposnsável pela
+validação do nome e peso do produto*/
+let valorValido;
+    
+// ----------------------------------------------------------------------------
+
+
+//INÍCIO DO PROGRAMA
+
+//apresentação do programa
+console.log("\nPROGRAMA CADASTRO DE PEÇAS");
+console.log("O programa cadastra produtos em uma lista.");
+console.log("Obs.: É possível cadastrar até 10 produtos!");
+
+/*configura a variável 'cadastrarNovoProduto' para que o programa possa inicializar um novo
+cadastro automáticamente*/
+cadastrarNovoProduto = 'sim';
+
+/*inicia um novo cadastro, somente se a 'resposta' for 'sim' (ou uma de suas
+variantes) e se a lista não estiver completa*/
+while (respostas.includes(cadastrarNovoProduto) && listaDeProdutos.size < 10) {
+    //inicializa a variável de controle da validação
+    valorValido = false
+
+    //inicia o processo de validação
+    while (valorValido == false) {
+
+        //lê o nome do produto
+        nomeDoProduto = read.question("\nNome do produto: ");
+
+        //faz a validação
+        if (nomeDoProduto.length >= 3) {
+            valorValido = true;
+        } else {
+            console.log('Atênção: O nome do produto deverá conter no mínimo 3 caracteres!');
+        }
+
+        /*reinicia o processo de validação do nome, caso o requesito não tenha
+        sido atendido*/
+    }
+
+    /*reconfigura a variável 'valorValido' para inicializar o processo de
+    validação do peso do produto*/
+    valorValido = false;
+
+    while (valorValido == false) {
+
+        //lê o peso do produto
+        pesoDoProduto = read.questionFloat('Peso do produto (em gramas): ');
+        
+        //faz a validação
+        if (pesoDoProduto > 100.00) {
+            valorValido = true;
+        } else {
+            console.log('Atênção: o peso do produto deverá ser maior que 100 gr!\n');         
+        }
+       
+        /*reinicia o processo de validação do peso do produto, caso o 
+        requesito não tenha sido atendido*/
+    }
+
+    /*Caso o nome do produto e o seu peso sejam válidos, cadastra-os na lista
+    de produtos*/
+    listaDeProdutos.set(nomeDoProduto, pesoDoProduto);
+
+    //Pergunta se o usuário quer cadastrar um novo produto
+    cadastrarNovoProduto = read.question("\nCadastrar um novo produto(s/n)?: ");
+
+    /*reinicia todo o processo de cadastro e validação, caso o usuário deseje 
+    cadastar um novo produto e tenha espaço na caixa*/
+}
+
+//informa quando a quantidade de produtos for maior do que a da caixa
+if (listaDeProdutos.size == 10) {
+    console.log("Não é possível cadastrar mais produtos. Capacidade máxima da caixa é de 10 produtos.");
+}
+
+//lista os produtos cadastrado depois de finalizar o cadastramento
+console.log("\nProdutos:");
+for ([nomeDoProduto, pesoDoProduto] of listaDeProdutos) {
+    console.log(nomeDoProduto + ", " + pesoDoProduto + "gramas.");
+}
+
+//exibe o total de produtos cadastrados
+console.log("\nTotal de produtos: " + listaDeProdutos.size + "\n");
+
+//FIM DO PROGRAMA
